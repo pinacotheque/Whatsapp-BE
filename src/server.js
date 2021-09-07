@@ -7,21 +7,36 @@ import { errorMiddlewares } from "./errorMiddlewares.js"
 import usersRouter from "./services/users/users.js";
 import messagesRouter from "./services/messages/messages.js";
 import chatsRouter from "./services/chat/chats.js";
+import authRouter from "./services/auth.js";
 
 const server = express();
 const port = process.env.PORT || 3004
+const whitelist = [process.env.FRONTEND_URL, process.env.FRONTEND_PROD_URL]
 
 // ****************** MIDDLEWARES ****************************
 
 server.use(express.json());
-server.use(cors())
 server.use(cookieParser())
+server.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error("Not allowed by cors!"))
+      }
+    },
+    credentials: true,
+  })
+)
 
 // ****************** ROUTES *******************************
 
 server.use("/users", usersRouter)
 server.use("/messages", messagesRouter)
 server.use("/chats", chatsRouter)
+server.use("/auth", authRouter)
+
 // ****************** ERROR HANDLERS ***********************
 
 server.use([errorMiddlewares])
