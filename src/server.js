@@ -6,8 +6,8 @@ import cookieParser from "cookie-parser"
 import { errorMiddlewares } from "./errorMiddlewares.js"
 import usersRouter from "./services/users/users.js";
 import messagesRouter from "./services/messages/messages.js";
-import chatsRouter from "./services/chat/chats.js";
 import authRouter from "./services/auth.js";
+import roomsRouter from "./services/rooms/rooms.js";
 
 const server = express();
 const port = process.env.PORT || 3004
@@ -34,7 +34,7 @@ server.use(
 
 server.use("/users", usersRouter)
 server.use("/messages", messagesRouter)
-server.use("/chats", chatsRouter)
+server.use("/rooms", roomsRouter)
 server.use("/auth", authRouter)
 
 // ****************** ERROR HANDLERS ***********************
