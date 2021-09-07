@@ -1,5 +1,6 @@
 import { Router } from "express"
 import createError from "http-errors"
+import { JWTAuthMiddleware } from "../auth/middlewares.js"
 import { JWTAuthenticate, refreshTokenFunc } from "../auth/tools.js"
 import UserModel from "./users/schema.js"
 
@@ -16,7 +17,7 @@ authRouter.post("/login", async (req, res, next) => {
         secure: false,
       })
       res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false })
-      res.redirect(`http://localhost:${process.env.PORT}/users/me`)
+      res.redirect(`${process.env.BACKEND_URL}/users/me`)
     } else {
       next(createError(401, "Credentials are not valid"))
     }
@@ -40,7 +41,7 @@ authRouter.post("/register", async (req, res, next) => {
         secure: false,
       })
       res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false })
-      res.redirect(`http://localhost:${process.env.PORT}/users/me`)
+      res.redirect(`${process.env.BACKEND_URL}/users/me`)
     }
   } catch (error) {
     next(error)
@@ -55,8 +56,23 @@ authRouter.get("/refreshToken", async (req, res, next) => {
         httpOnly: true,
         secure: false,
       })
-      res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false })
-      res.redirect(`http://localhost:${process.env.PORT}/users/me`)
+      res.cookie("refreshToken", refreshToken, { 
+        httpOnly: true, 
+        secure: false 
+      })
+      res.redirect(`${process.env.BACKEND_URL}/users/me`)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  authRouter.post("/logout", JWTAuthMiddleware, async (req, res, next) => {
+    try {
+      req.user.refreshToken = null
+      await req.user.save()
+      res.cookie("accessToken", null)
+      res.cookie("refreshToken", null)
+      res.send()
     } catch (error) {
       next(error)
     }
