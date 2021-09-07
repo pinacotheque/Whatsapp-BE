@@ -5,6 +5,8 @@ import MessageModel from "./schema.js"
 
 const messagesRouter = Router()
 
+/****************POST A MESSAGE******************************/
+
 messagesRouter.post("/", async (req, res, next) => {
   try {
     const newMessage = new MessageModel(req.body)
@@ -16,7 +18,7 @@ messagesRouter.post("/", async (req, res, next) => {
   }
 })
 
-/* ***************GET ALL MESSAGES OF SPECIFIC ROOM */
+/* ***************GET ALL MESSAGES OF SPECIFIC ROOM *****************/
 
 messagesRouter.get("/:roomId", async (req, res, next) => {
   try {
@@ -33,6 +35,8 @@ messagesRouter.get("/:roomId", async (req, res, next) => {
     next(createError(500, 'Messages not found'))
   }
 })
+
+/****************UPLOAD IMAGE TO CHAT******************************/
 
 messagesRouter.post("/:messageId/postImage", uploadOnCloudinaryPost, async (req, res, next) => {
   try {
@@ -52,6 +56,8 @@ messagesRouter.post("/:messageId/postImage", uploadOnCloudinaryPost, async (req,
   }
 })
 
+/****************EDIT A MESSAGE******************************/
+
 messagesRouter.put("/:messageId", async (req, res, next) => {
   try {
     const messageId = req.params.messageId
@@ -68,6 +74,8 @@ messagesRouter.put("/:messageId", async (req, res, next) => {
     next(error)
   }
 })
+
+/****************DELETE A MESSAGE******************************/
 
 messagesRouter.delete("/:messageId", async (req, res, next) => {
     try {

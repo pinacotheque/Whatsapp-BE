@@ -14,6 +14,8 @@ roomsRouter.get("/", async (req, res, next) => {
   }
 })
 
+/**************GET ALL ROOMS OF A SPECIFIC USER**********************/
+
 roomsRouter.get("/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId
@@ -31,6 +33,8 @@ roomsRouter.get("/:userId", async (req, res, next) => {
     next(error)
   }
 })
+
+/***************CREATE A NEW ROOM****************************/
 
 roomsRouter.post("/", async (req, res, next) => {
   try {
@@ -51,6 +55,8 @@ roomsRouter.post("/", async (req, res, next) => {
   }
 })
 
+/****************UPLOAD ROOM AVATAR******************************/
+
 roomsRouter.post("/:roomId/uploadAvatar", uploadOnCloudinaryRoomAvatar, async (req, res, next) => {
     try {
       const roomId = req.params.roomId
@@ -69,6 +75,8 @@ roomsRouter.post("/:roomId/uploadAvatar", uploadOnCloudinaryRoomAvatar, async (r
     }
   }
 )
+
+/****************UPLOAD ROOM BACKGROUND IMAGE******************************/
 
 roomsRouter.post("/:roomId/uploadBackground", uploadOnCloudinaryRoomBackground, async (req, res, next) => {
   try {
@@ -89,6 +97,8 @@ roomsRouter.post("/:roomId/uploadBackground", uploadOnCloudinaryRoomBackground, 
 }
 )
 
+/****************EDIT ROOM DETAILS******************************/
+
 roomsRouter.put("/:roomId", async (req, res, next) => {
   try {
     const roomId = req.params.roomId
@@ -105,6 +115,8 @@ roomsRouter.put("/:roomId", async (req, res, next) => {
     next(error)
   }
 })
+
+/****************DELETE ROOM******************************/
 
 roomsRouter.delete("/:roomId", async (req, res, next) => {
   try {
