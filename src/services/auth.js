@@ -70,9 +70,7 @@ authRouter.get("/refreshToken", async (req, res, next) => {
     try {
       req.user.refreshToken = null
       await req.user.save()
-      res.cookie("accessToken", null)
-      res.cookie("refreshToken", null)
-      res.send()
+      res.clearCookie("accessToken").send('you have successfully logged out!')
     } catch (error) {
       next(error)
     }
