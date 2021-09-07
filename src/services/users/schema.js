@@ -26,6 +26,9 @@ const UserSchema = new Schema(
       required: true,
       min: 6,
     },
+    about:{
+      type:String
+    },
     status:{
       type: String,
       required: true,
