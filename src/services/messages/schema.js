@@ -2,16 +2,23 @@ import mongoose from "mongoose"
 
 const { Schema, model } = mongoose
 
-const MessageSchema = new Schema(
+export const MessageSchema = new Schema(
   {
-   chatId: {
-      type: String,
+   roomId: {
+      type: Schema.Types.ObjectId,
+      ref: "Room",
+      required: true
     },
     sender:{
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
     message:{
       type: String,
+    },
+    image:{
+      type: String
     },   
   },
   {

@@ -34,7 +34,10 @@ const UserSchema = new Schema(
     avatar: {
       type: String,
       default: "https://www.vabali.de/online/wp-content/uploads/blank-avatar-profile.png",
-    }    
+    },
+    refreshToken:{
+      type: String
+    }   
   },
   {
     timestamps: true,
@@ -52,6 +55,7 @@ UserSchema.methods.toJSON = function () {
   const userDocument = this
   const userObject = userDocument.toObject()
   delete userObject.password
+  delete userObject.refreshToken
   delete userObject.__v
   return userObject
 }
