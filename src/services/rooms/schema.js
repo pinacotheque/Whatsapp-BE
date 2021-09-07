@@ -8,6 +8,9 @@ const RoomSchema = new Schema(
     name:{
       type: String
     },
+    description:{
+      type: String
+    },
     roomAvatar:{
       type: String,
       default:"https://www.vabali.de/online/wp-content/uploads/blank-avatar-profile.png"

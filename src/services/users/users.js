@@ -57,6 +57,7 @@ usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
     body.status = req.body.status ? req.body.status : body.status
     body.username = req.body.username ? req.body.username : body.username
     body.email = req.body.email ? req.body.email : body.email
+    body.about = req.body.about ? req.body.about : body.about
     body.avatar = req.body.avatar ? req.body.avatar : body.avatar
     const editUser = await body.save()
     res.send(editUser)
