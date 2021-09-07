@@ -1,56 +1,50 @@
-import express from "express";
-import listEndpoints from "express-list-endpoints";
-import cors from "cors";
-import mongoose from "mongoose";
-import cookieParser from "cookie-parser"
-import { errorMiddlewares } from "./errorMiddlewares.js"
-import usersRouter from "./services/users/users.js";
-import messagesRouter from "./services/messages/messages.js";
-import authRouter from "./services/auth.js";
-import roomsRouter from "./services/rooms/rooms.js";
+import { createServer } from "http"
+import { Server } from "socket.io";
+import { addUser, removeUser } from "./usersFunc.js";
+import RoomModel from "./services/rooms/schema.js"
+import app from "./app.js";
 
-const server = express();
-const port = process.env.PORT || 3004
-const whitelist = [process.env.FRONTEND_URL, process.env.FRONTEND_PROD_URL]
+// ****************** Passing it to a Http Server *******************************
 
-// ****************** MIDDLEWARES ****************************
+const server = createServer(app)
 
-server.use(express.json());
-server.use(cookieParser())
-server.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error("Not allowed by cors!"))
-      }
-    },
-    credentials: true,
-  })
-)
+// Instantiating the io server using the http server. We can't pass the app here
 
-// ****************** ROUTES *******************************
+const io = new Server(server, { 
+    allowEIO3: true 
+})
 
-server.use("/users", usersRouter)
-server.use("/messages", messagesRouter)
-server.use("/rooms", roomsRouter)
-server.use("/auth", authRouter)
+// ****************** EVENT LISTENERS *******************************
 
-// ****************** ERROR HANDLERS ***********************
+io.on("connection", socket => {
+    console.log(socket.id);
 
-server.use([errorMiddlewares])
+    // ******* LOGIN *********
 
-console.table(listEndpoints(server));
-
-mongoose
-  .connect(process.env.MONGO_CONNECTION, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() =>
-    server.listen(port, () => {
-      console.log("🧡 server is running on port ", port);
+    socket.on("login", (userId, roomId) => {
+        addUser(userId, socket.id, roomId)
+        socket.join(roomId)
+        socket.broadcast.emit("newLogin") //send to everyone except the client
+        socket.emit("loggedin") //send only to client
     })
-  )
-  .catch((err) => console.log(err));
+
+    // *** SEND MESSAGE ****
+
+    socket.on("sendMessage", async (message, roomId) => {
+        await RoomModel.findByIdAndUpdate(roomId,{
+            $push:{
+                chatHistory: message
+            }
+        })
+        socket.to(roomId).emit("message", message)
+    })
+
+    // ******* DISCONNECT *********
+
+    socket.on("disconnect", () => {
+        console.log("socket disconnected");
+        removeUser(socket.id)
+    })
+})
+
+export default server

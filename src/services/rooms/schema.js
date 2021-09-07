@@ -21,6 +21,11 @@ const RoomSchema = new Schema(
     members:{
       type: [Schema.Types.ObjectId],
       ref:"User"
+    },
+    chatHistory:{
+      type: [MessageSchema],
+      required: true,
+      default:[]
     }
   },
   {
