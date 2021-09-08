@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { MessageSchema } from "../messages/schema.js"
+import MessageModel from "../messages/schema.js"
 
 const { Schema, model } = mongoose
 
@@ -33,5 +34,18 @@ const RoomSchema = new Schema(
     timestamps: true,
   }
 )
+
+RoomSchema.pre('findOneAndDelete',async function(next) {
+  try {
+    let deletedRoom = this.getQuery()._id
+    console.log(deletedRoom);
+    if(deletedRoom){
+      await MessageModel.deleteMany({"roomId": deletedRoom})
+    }
+    next()
+  } catch (error) {
+    console.log(error);
+  }
+})
 
 export default model("Room", RoomSchema)
