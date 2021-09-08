@@ -21,6 +21,7 @@ authRouter.post("/login", async (req, res, next) => {
       res.cookie("accessToken", accessToken, COOKIE_SETTINGS)
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS)
       res.redirect(`${process.env.BACKEND_URL}/users/me`)
+
     } else {
       next(createError(401, "Credentials are not valid"))
     }
@@ -39,10 +40,7 @@ authRouter.post("/register", async (req, res, next) => {
       const newUser = new UserModel(req.body)
       const addedUser = await newUser.save()
       const { accessToken, refreshToken } = await JWTAuthenticate(addedUser)
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: false,
-      })
+      res.cookie("accessToken", accessToken, COOKIE_SETTINGS)
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS)
       res.redirect(`/users/me`)
     }
