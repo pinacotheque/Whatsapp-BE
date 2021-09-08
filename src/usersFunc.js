@@ -10,3 +10,5 @@ export const addUser = (userId, socketId, roomId) => {
 export const removeUser = (socketId) => {
     users = users.filter(user => user.socketId !== socketId)
 }
+
+export default users

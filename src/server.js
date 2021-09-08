@@ -1,6 +1,7 @@
 import { createServer } from "http"
 import { Server } from "socket.io";
 import { addUser, removeUser } from "./usersFunc.js";
+import users from "./usersFunc.js";
 import RoomModel from "./services/rooms/schema.js"
 import app from "./app.js";
 
@@ -26,6 +27,7 @@ io.on("connection", socket => {
         socket.join(roomId)
         socket.broadcast.emit("newLogin") //send to everyone except the client
         socket.emit("loggedin") //send only to client
+        io.sockets.emit("getUsers", users)
     })
 
     // *** SEND MESSAGE ****
@@ -44,6 +46,7 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
         console.log("socket disconnected");
         removeUser(socket.id)
+        io.sockets.emit("getUsers", users)
     })
 })
 
