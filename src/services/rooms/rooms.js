@@ -102,7 +102,8 @@ roomsRouter.post("/:roomId/uploadBackground", uploadOnCloudinaryRoomBackground, 
 roomsRouter.put("/:roomId", async (req, res, next) => {
   try {
     const roomId = req.params.roomId
-    const editRoom = await RoomModel.findByIdAndUpdate(roomId, req.body, {
+    console.log(req.body.members);
+    const editRoom = await RoomModel.findByIdAndUpdate(roomId,req.body, {
       new: true,
       runValidators: true,
     })
@@ -112,6 +113,35 @@ roomsRouter.put("/:roomId", async (req, res, next) => {
       next(createError(404, `room with id: ${roomId} not found`))
     } 
   } catch (error) {
+    console.log(error);
+    next(error)
+  }
+})
+
+/****************EDIT ROOM MEMBERS******************************/
+
+roomsRouter.put("/:roomId/members", async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId
+    console.log(req.body.members);
+    const editRoom = await RoomModel.findByIdAndUpdate(roomId,{
+      $addToSet:{
+        members: {
+          $each:req.body.members
+        }
+      }
+    }, {
+      new: true,
+      runValidators: true,
+      upsert: true
+    })
+    if (editRoom) {
+      res.send(editRoom)
+    } else {
+      next(createError(404, `room with id: ${roomId} not found`))
+    } 
+  } catch (error) {
+    console.log(error);
     next(error)
   }
 })

@@ -10,6 +10,7 @@ export const JWTAuthMiddleware = async (req, res, next) => {
     try {
       const token = req.cookies.accessToken
       const decodedToken = await verifyJWT(token)
+      console.log(decodedToken);
       const user = await UserModel.findById(decodedToken._id)
       if (user) {
         req.user = user

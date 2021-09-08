@@ -19,16 +19,17 @@ const RoomSchema = new Schema(
     roomBackground:{
       type: String,
     },
-    members:{
-      type: [Schema.Types.ObjectId],
+    members:[{
+      type: Schema.Types.ObjectId,
       ref:"User",
       required: true
-    },
+    }]
+    ,
     chatHistory:{
       type: [MessageSchema],
       required: true,
       default:[]
-    }
+    },
   },
   {
     timestamps: true,
