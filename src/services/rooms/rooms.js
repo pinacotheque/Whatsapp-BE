@@ -5,14 +5,14 @@ import RoomModel from "./schema.js"
 
 const roomsRouter = Router()
 
-roomsRouter.get("/", async (req, res, next) => {
+/* roomsRouter.get("/", async (req, res, next) => {
   try {
 
   } catch (error) {
     console.log(error)
     next(error)
   }
-})
+}) */
 
 /**************GET ALL ROOMS OF A SPECIFIC USER**********************/
 
