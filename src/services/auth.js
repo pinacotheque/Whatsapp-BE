@@ -41,7 +41,7 @@ authRouter.post("/register", async (req, res, next) => {
         secure: false,
       })
       res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false })
-      res.redirect(`${process.env.BACKEND_URL}/users/me`)
+      res.redirect(`/users/me`)
     }
   } catch (error) {
     next(error)
@@ -60,7 +60,7 @@ authRouter.get("/refreshToken", async (req, res, next) => {
         httpOnly: true, 
         secure: false 
       })
-      res.redirect(`${process.env.BACKEND_URL}/users/me`)
+      res.redirect(`/users/me`)
     } catch (error) {
       next(error)
     }
