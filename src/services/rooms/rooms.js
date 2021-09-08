@@ -102,7 +102,6 @@ roomsRouter.post("/:roomId/uploadBackground", uploadOnCloudinaryRoomBackground, 
 roomsRouter.put("/:roomId", async (req, res, next) => {
   try {
     const roomId = req.params.roomId
-    console.log(req.body.members);
     const editRoom = await RoomModel.findByIdAndUpdate(roomId,req.body, {
       new: true,
       runValidators: true,
@@ -154,6 +153,36 @@ roomsRouter.delete("/:roomId", async (req, res, next) => {
     const deletedRoom = await RoomModel.findByIdAndDelete(roomId)
     if(deletedRoom){
       res.status(204).send()
+    }else{
+      next(createError(404, `room with id: ${roomId} not found`))
+    }
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+})
+
+/****************DELETE A MEMBER******************************/
+
+roomsRouter.delete("/:roomId/members/:userId", async (req, res, next) => {
+  try {
+    const roomId = req.params.roomId
+    const userId = req.params.userId
+    const membersOfRoom = await RoomModel.find({
+      members: {
+        $in: [userId]
+      }
+    })
+    const memberToDelete = await RoomModel.findByIdAndUpdate(roomId,
+      {
+        $pull:{
+          members: userId
+        }
+      },{
+        new: true
+      })
+    if(memberToDelete){
+      res.status(200).send(memberToDelete)
     }else{
       next(createError(404, `room with id: ${roomId} not found`))
     }
