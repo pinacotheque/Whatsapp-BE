@@ -17,7 +17,7 @@ authRouter.post("/login", async (req, res, next) => {
         secure: false,
       })
       res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false })
-      res.redirect(`${process.env.BACKEND_URL}/users/me`)
+      res.redirect(`/users/me`)
     } else {
       next(createError(401, "Credentials are not valid"))
     }
