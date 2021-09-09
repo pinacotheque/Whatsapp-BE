@@ -5,14 +5,20 @@ import RoomModel from "./schema.js"
 
 const roomsRouter = Router()
 
-/* roomsRouter.get("/", async (req, res, next) => {
+roomsRouter.get("/:roomId", async (req, res, next) => {
   try {
-
+    const roomId = req.params.roomId
+    const room = await RoomModel.findById(roomId)
+    if(room){
+      res.send(room)
+    }else{
+      res.status(404).send(`room with id: ${roomId} not found`)
+    }
   } catch (error) {
     console.log(error)
     next(error)
   }
-}) */
+}) 
 
 /**************GET ALL ROOMS OF A SPECIFIC USER**********************/
 
