@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 import { MessageSchema } from "../messages/schema.js"
-import MessageModel from "../messages/schema.js"
 
 const { Schema, model } = mongoose
 
@@ -36,7 +35,7 @@ const RoomSchema = new Schema(
   }
 )
 
-RoomSchema.pre('findOneAndDelete',async function(next) {
+/* RoomSchema.pre('findOneAndDelete',async function(next) {
   try {
     let deletedRoom = this.getQuery()._id
     console.log(deletedRoom);
@@ -47,6 +46,6 @@ RoomSchema.pre('findOneAndDelete',async function(next) {
   } catch (error) {
     console.log(error);
   }
-})
+}) */
 
 export default model("Room", RoomSchema)
