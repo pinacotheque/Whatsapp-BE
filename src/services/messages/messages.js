@@ -13,7 +13,7 @@ messagesRouter.post("/:roomId",uploadOnCloudinaryPost, async (req, res, next) =>
     const roomId = req.params.roomId
     const newMessage = {
       ...req.body,
-      image: req.file?.path ? req.file.path : "",
+      image: req.file?.path && req.file.path,
       createdAt: new Date(),
       updatedAt: new Date()
     }
