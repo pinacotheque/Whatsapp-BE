@@ -5,10 +5,10 @@ import RoomModel from "./schema.js"
 
 const roomsRouter = Router()
 
-roomsRouter.get("/:roomId", async (req, res, next) => {
+roomsRouter.get("/singleRoom/:roomId", async (req, res, next) => {
   try {
     const roomId = req.params.roomId
-    const room = await RoomModel.findById(roomId)
+    const room = await RoomModel.findById(roomId).populate("members")
     if(room){
       res.send(room)
     }else{
@@ -36,6 +36,7 @@ roomsRouter.get("/:userId", async (req, res, next) => {
       next(createError(404, `user with userId: ${userId} is not assigned to any room`))
     }
   } catch (error) {
+    console.log(error);
     next(error)
   }
 })
