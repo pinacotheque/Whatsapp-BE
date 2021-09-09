@@ -4,11 +4,6 @@ const { Schema, model } = mongoose
 
 export const MessageSchema = new Schema(
   {
-   roomId: {
-      type: Schema.Types.ObjectId,
-      ref: "Room",
-      required: true
-    },
     sender:{
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -19,11 +14,10 @@ export const MessageSchema = new Schema(
     },
     image:{
       type: String
-    },   
-  },
-  {
-    timestamps: true,
+    },
+    createdAt: Date,
+    updatedAt: Date   
   }
 )
 
-export default model("Message", MessageSchema)
+/* export default model("Message", MessageSchema) */
