@@ -43,7 +43,7 @@ messagesRouter.get("/:roomId", async (req, res, next) => {
     const roomId = req.params.roomId
     const room = await RoomModel.findById(roomId).populate("chatHistory.sender")
     if(room){
-        res.send(room)
+        res.send(room.chatHistory)
     }else{
         res.status(404).send(`room with id: ${roomId} not found`)
     }
@@ -55,7 +55,7 @@ messagesRouter.get("/:roomId", async (req, res, next) => {
 
 /****************UPLOAD IMAGE TO CHAT******************************/
 
-messagesRouter.post("/:roomId/:messageId/postImage", uploadOnCloudinaryPost, getSingleMessage, async (req, res, next) => {
+messagesRouter.post("/:roomId/:messageId/postImage", uploadOnCloudinaryPost, async (req, res, next) => {
   try {
     const roomId = req.params.roomId
     const messageId = req.params.messageId
@@ -68,10 +68,21 @@ messagesRouter.post("/:roomId/:messageId/postImage", uploadOnCloudinaryPost, get
         'chatHistory.$.image': newImage
       }
     },{
-      new: true
+      new: true,
+      runValidators: true
     })
+
+    const updatedMessage = await RoomModel.findById(roomId,{
+      chatHistory:{
+        $elemMatch: {
+          _id: messageId
+        }
+      },
+      _id: 0
+    })
+
    if(toUpdateMessage){
-     res.send(toUpdateMessage)
+     res.send(updatedMessage.chatHistory[0])
    }else{
      next(createError(404, `room with id: ${roomId} not found`))
    }
