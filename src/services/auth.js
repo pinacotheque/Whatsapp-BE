@@ -20,7 +20,7 @@ authRouter.post("/login", async (req, res, next) => {
       const { accessToken, refreshToken } = await JWTAuthenticate(user)
       res.cookie("accessToken", accessToken, COOKIE_SETTINGS)
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS)
-      res.redirect(`${process.env.BACKEND_URL}/users/me`)
+      res.redirect(`/users/me`)
 
     } else {
       next(createError(401, "Credentials are not valid"))
